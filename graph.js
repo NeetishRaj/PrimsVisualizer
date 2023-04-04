@@ -48,6 +48,30 @@ class Graph {
     console.log(this.adj_matrix);
     return this;
   }
+
+  get_top_label() {
+    if(this.nodes_count > 0)
+      return this.node_labels[this.nodes_count - 1];
+    else 
+      return 1;
+  }
+
+  add_vertex() {
+    if(this.node_labels.length > 0) {
+      const last_label = this.node_labels[this.node_labels.length - 1];
+      this.node_labels.push(last_label + 1);
+    } else {
+      this.node_labels.push(1);
+    }
+
+    for (let i = 0; i < this.nodes_count; i++) {
+      this.adj_matrix[i].push(0);
+    }
+    this.adj_matrix.push(new Array(this.nodes_count + 1).fill(0));
+    console.log(this);
+    this.update_graph();
+    return this;
+  }
   
   remove_vertex(vertex_label) {
     let vertex = this.node_labels.indexOf(parseInt(vertex_label));
