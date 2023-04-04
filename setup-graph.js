@@ -88,6 +88,10 @@ function setup_cytoscape(graph) {
   var tappedTimeout;
   cy.on('tap', function (event) {
     var tappedNow = event.target;
+    if(event.target === cy) {
+      last_position = event.position;
+    }
+
     if (tappedTimeout && tappedBefore) {
       clearTimeout(tappedTimeout);
     }
@@ -118,6 +122,15 @@ function setup_cytoscape(graph) {
     console.log(`DOUBLE CLICK on ${this.id()}`);
     this.remove();
     remove_vertex(this.id());
+  });
+
+  cy.on('doubleTap', function(event){
+    var evtTarget = event.target;
+  
+    if( evtTarget === cy ){
+      console.log('double tap on background');
+      add_vertex();
+    } 
   });
 }
 
@@ -154,12 +167,24 @@ function generate_nodes(graph) {
 }
 
 function redraw_graph() {
-  // cy.elements().remove();
-  // cy.add(cy_config.elements);
-  // cy.json({elements: cy_config.elements});
-  // cy.run();
 
   setup_adj_matrix(graph);
+}
+
+function add_vertex() {
+  GraphObj.add_vertex();
+  cy.add([
+    { 
+      group: 'nodes', 
+      data: { 
+        id: GraphObj.get_top_label(), 
+        weight: GraphObj.get_top_label() 
+      },
+      position: last_position
+    }
+  ]);
+
+  redraw_graph();
 }
 
 function remove_vertex(vertex_no) {
