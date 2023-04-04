@@ -1,19 +1,5 @@
 let table;
 
-// function add_row_col_headers(adj_matrix) {
-//   const headers = [''];
-//   adj_matrix.forEach((item, index) => {
-//     headers.push(index + 1);
-//   });
-
-//   let result = [headers];
-//   adj_matrix.forEach((item, index) => {
-//     result.push([index + 1, ...item]);
-//   });
-
-//   return result;
-// }
-
 function setup_adj_matrix(adj_matrix) {
   const labeled_adj_graph = GraphObj.get_labeled_graph();
 

@@ -39,18 +39,23 @@
     <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
 
     <!--polyfills are needed for this extension for old browsers like IE -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.5.7/shim.min.js"></script>
+    <script
+      defer
+      src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.5.7/shim.min.js"
+    ></script>
 
-    <script src="https://unpkg.com/layout-base/layout-base.js"></script>
-    <script src="https://unpkg.com/avsdf-base/avsdf-base.js"></script>
-    <script src="cytoscape-avsdf.js"></script>
+    <!-- <script defer src="https://unpkg.com/layout-base/layout-base.js"></script>
+    <script defer src="https://unpkg.com/avsdf-base/avsdf-base.js"></script> -->
+    <script defer src="./lib/layout-base.js"></script>
+    <script defer src="./lib/avsdf-base.js"></script>
+    <script defer src="./cytoscape-avsdf.js"></script>
 
-    <script src="./config.js"></script>
-    <script src="./graph.js"></script>
-    <script src="./setup-graph.js"></script>
-    <script src="./setup-adj-matrix.js"></script>
-    <!-- <script src="generate-rand-graph.js"></script> -->
-    <script src="./index.js"></script>
+    <script defer src="./config.js"></script>
+    <script defer src="./graph.js"></script>
+    <script defer src="./setup-graph.js"></script>
+    <script defer src="./setup-adj-matrix.js"></script>
+    <!-- <script defer src="generate-rand-graph.js"></script> -->
+    <script defer src="./index.js"></script>
   </head>
 
   <body>
@@ -59,8 +64,45 @@
         <div class="title d-flex justify-content-center align-items-center">
           <h1>Prim's Visualizer</h1>
         </div>
-        <div class="info d-flex justify-content-center align-items-center">
-          <span>Created a random graph</span>
+        <div class="info">
+          <div class="row h-100 d-flex h-full align-items-center">
+            <div class="col col6">
+              <div class="d-flex">
+                <div class="input-group mb-3 m-1">
+                  <div class="input-group-prepend">
+                    <label class="input-group-text" style="border-radius: 5px 0 0 5px;" for="edgeSource"
+                      >Source</label
+                    >
+                  </div>
+                  <input id="edgeSource" class="form-control" type="number" />
+                </div>
+                <div class="input-group mb-3 m-1">
+                  <div class="input-group-prepend">
+                    <label class="input-group-text" style="border-radius: 5px 0 0 5px;" for="edgeTarget"
+                      >Target</label
+                    >
+                  </div>
+                  <input id="edgeTarget" class="form-control" type="number" />
+                </div>
+                <div class="input-group mb-3 m-1">
+                  <div class="input-group-prepend">
+                    <label class="input-group-text" style="border-radius: 5px 0 0 5px;" for="edgeWeight"
+                      >Weight</label
+                    >
+                  </div>
+                  <input id="edgeWeight" class="form-control" type="number" />
+                </div>
+                <div class="m-1">
+                  <button id="updateEdgeButton" onclick="updateEdgeFromInput()" class="btn btn-primary">Update</button>
+                </div>
+              </div>
+            </div>
+            <div class="col col6">
+              <div class="info-right d-flex justify-content-center">
+                <span>Created a random graph</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -69,30 +111,28 @@
           <div id="cy"></div>
         </div>
 
-        <div id="adjMatrix" class="adj-matrix col">
-
-        </div>
+        <div id="adjMatrix" class="adj-matrix col"></div>
       </div>
 
       <div class="row controls d-flex align-items-center">
         <div class="btn-group">
           <button type="button" class="btn btn-lg btn-primary m-4">
-            First Step
-          </button>
-          <button type="button" class="btn btn-lg btn-primary m-4">Next</button>
-          <button type="button" class="btn btn-lg btn-primary m-4">
             Start/Stop
           </button>
-          <button type="button" class="btn btn-lg btn-primary m-4">
+          <button disabled type="button" class="btn btn-lg btn-primary m-4">
             Previous
           </button>
-          <button type="button" class="btn btn-lg btn-primary m-4">
+          <button disabled type="button" class="btn btn-lg btn-primary m-4">Next</button>
+          <button disabled type="button" class="btn btn-lg btn-primary m-4">
+            First Step
+          </button>
+          <button disabled type="button" class="btn btn-lg btn-primary m-4">
             Last Step
           </button>
         </div>
       </div>
-      <div class="row footer ">
-        <div class="d-flex justify-content-center align-items-center" >
+      <div class="row footer">
+        <div class="d-flex justify-content-center align-items-center">
           <span> Footer Message</span>
         </div>
       </div>

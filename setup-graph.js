@@ -79,11 +79,8 @@ function setup_cytoscape(graph) {
 
   cy.on('rightclick', 'node', function (evt) {
     console.log('right clicked ' + this.id());
-    // remove_vertex(graph, this.id());
-  });
-
-  cy.on('click', 'edge', function (evt) {
-    console.log('clicked ' + this.id());
+    
+    remove_vertex(graph, this.id());
   });
 
   // Double click setup
@@ -105,6 +102,18 @@ function setup_cytoscape(graph) {
     }
   });
 
+  cy.on('click', 'edge', function (evt) {
+    console.log('clicked ' + this.id());
+    update_edge_inputs(this.data());
+    currentEdgeObj = this;
+  });
+
+  cy.on('doubleTap', 'edge', function (event) {
+    console.log(`DOUBLE CLICK on EDGE: ${this.id()}`);
+    delete_edge(this);
+  });
+
+
   cy.on('doubleTap', 'node', function (event) {
     console.log(`DOUBLE CLICK on ${this.id()}`);
     this.remove();
@@ -119,7 +128,7 @@ function generate_edges(graph) {
     for (let j = i + 1; j < graph[i].length; j++) {
       if (graph[i][j] === INFINITY) continue;
 
-      if (graph[i][j] !== -1) {
+      if (graph[i][j] !== 0) {
         result.push({
           data: {
             source: `${i + 1}`,
@@ -156,6 +165,57 @@ function redraw_graph() {
 function remove_vertex(vertex_no) {
   console.log(`Removing vertex ${vertex_no}`);
   GraphObj.remove_vertex(vertex_no);
+
+  redraw_graph();
+}
+
+function update_edge_inputs(edge_data) {
+  const inputSrc = document.querySelector('#edgeSource');
+  const inputTarget = document.querySelector('#edgeTarget');
+  const inputWeight = document.querySelector('#edgeWeight');
+
+  inputSrc.value = edge_data.source;
+  inputTarget.value = edge_data.target;
+  inputWeight.value = edge_data.label;
+}
+
+function updateEdgeFromInput() {
+  const inputSrc = document.querySelector('#edgeSource').value;
+  const inputTarget = document.querySelector('#edgeTarget').value;
+  const inputWeight = document.querySelector('#edgeWeight').value;
+  
+  
+  if(GraphObj.is_edge_there(inputSrc, inputTarget)) {
+    console.log(`updating edge`);
+    GraphObj.update_edge(inputSrc, inputTarget, inputWeight);
+    currentEdgeObj.data({
+      label: inputWeight
+    })
+  } else {
+    console.log("Edge not available! Adding it!");
+    GraphObj.add_edge(inputSrc, inputTarget, inputWeight);
+    cy.add([
+      { group: 'edges', data: { 
+        // id: 'e0', 
+        source: inputSrc, 
+        target: inputTarget,
+        label: inputWeight,
+        directed: false 
+      } }
+    ]);
+  }
+  
+  redraw_graph();
+}
+
+
+function delete_edge(edge_obj) {
+  console.log(`Deleting edge`);
+  const edge_data = edge_obj.data();
+
+  GraphObj.delete_edge(edge_data.source, edge_data.target);
+
+  edge_obj.remove();
 
   redraw_graph();
 }

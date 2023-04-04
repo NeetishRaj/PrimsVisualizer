@@ -25,7 +25,7 @@ class Graph {
   
     for (let i = 0; i < vertexCount; i++) {
       for (let j = 0; j < vertexCount; j++) {
-        this.adj_matrix[i][j] = -1;
+        this.adj_matrix[i][j] = 0;
       }
     }
   
@@ -73,6 +73,59 @@ class Graph {
     console.log(this);
   }
 
+  is_edge_there(source, dest) {
+    const src_index = this.node_labels.indexOf(parseInt(source));
+    const dest_index = this.node_labels.indexOf(parseInt(dest));
+    
+    if(this.adj_matrix[src_index][dest_index] && this.adj_matrix[dest_index][src_index]){
+      return true;
+    }
+
+    return false;
+  }
+
+  add_edge(source, dest, new_weight) {
+    const src_index = this.node_labels.indexOf(parseInt(source));
+    const dest_index = this.node_labels.indexOf(parseInt(dest));
+    new_weight = parseInt(new_weight);
+
+    console.log(`Adding edge src: ${src_index}, dest: ${dest_index}, new_weight: ${new_weight}`);
+    this.adj_matrix[src_index][dest_index] = new_weight;
+    this.adj_matrix[dest_index][src_index] = new_weight;
+
+    this.update_graph();
+
+    return this;
+  }
+
+  update_edge(source, dest, new_weight) {
+    const src_index = this.node_labels.indexOf(parseInt(source));
+    const dest_index = this.node_labels.indexOf(parseInt(dest));
+    new_weight = parseInt(new_weight);
+
+    console.log(`src: ${src_index}, dest: ${dest_index}, new_weight: ${new_weight}`);
+    this.adj_matrix[src_index][dest_index] = new_weight;
+    this.adj_matrix[dest_index][src_index] = new_weight;
+
+    this.update_graph();
+
+    return this;
+  }
+
+  delete_edge(source, dest) {
+    const src_index = this.node_labels.indexOf(parseInt(source));
+    const dest_index = this.node_labels.indexOf(parseInt(dest));
+
+    console.log(`Deleting edge: src: ${src_index}, dest: ${dest_index}`);
+    
+    this.adj_matrix[src_index][dest_index] = 0;
+    this.adj_matrix[dest_index][src_index] = 0;
+
+    this.update_graph();
+
+    return this;
+  }
+
   update_graph() {
     this.nodes_count = this.adj_matrix.length;
   }
@@ -87,6 +140,55 @@ class Graph {
     });
   
     return result;
+  }
+
+  solve_prim(adjMatrix) {
+    const n = adjMatrix.length; // number of vertices
+    const visited = new Array(n).fill(false); // keep track of visited vertices
+    const distances = new Array(n).fill(Infinity); // keep track of minimum distance to each vertex
+    const parent = new Array(n).fill(null); // keep track of parent of each vertex in the MST
+  
+    // start with vertex 0
+    distances[0] = 0;
+    
+    for (let i = 0; i < n - 1; i++) {
+      console.log(`ROUND: ${i}   ###############`);
+  
+      // find the vertex with the minimum distance among the unvisited vertices
+      let minDist = Infinity;
+      let u;
+      for (let j = 0; j < n; j++) {
+        if (!visited[j] && distances[j] < minDist) {
+          minDist = distances[j];
+          u = j;
+          console.log(`min-distance: ${minDist}`);
+        }
+      }
+  
+      // mark the vertex as visited
+      visited[u] = true;
+  
+      // update the distances to the neighbors of the vertex
+      for (let v = 0; v < n; v++) {
+        if (adjMatrix[u][v] && !visited[v] && adjMatrix[u][v] < distances[v]) {
+          distances[v] = adjMatrix[u][v];
+          parent[v] = u;
+          console.log(`updated neighbor: u: ${u}, v: ${v}`);
+        }
+      }
+  
+      console.log(`Visisted: ${visited}`)
+      console.log(`Distance: ${distances}`)
+      console.log(`Parent: ${parent}\n`)
+    }
+  
+    // build the MST using the parent array
+    const mst = [];
+    for (let i = 1; i < n; i++) {
+      mst.push([parent[i], i, adjMatrix[parent[i]][i]]);
+    }
+  
+    return mst;
   }
 
 }
