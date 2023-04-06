@@ -9,6 +9,11 @@ class Graph {
     this.edges = [];
     this.adj_matrix = [];
     this.startVertex = 0;
+
+    this.stages = [];
+    this.visited = [];
+    this.distances = [];
+    this.parent = [];
   }
 
   generateRandomGraph() {
@@ -48,7 +53,9 @@ class Graph {
     console.log(this.adj_matrix);
     return this;
   }
-
+  get_index_from_label(label) {
+    return this.node_labels.indexOf(parseInt(label));
+  }
   get_top_label() {
     if(this.nodes_count > 0)
       return this.node_labels[this.nodes_count - 1];
@@ -166,14 +173,16 @@ class Graph {
     return result;
   }
 
-  solve_prim(adjMatrix) {
-    const n = adjMatrix.length; // number of vertices
-    const visited = new Array(n).fill(false); // keep track of visited vertices
-    const distances = new Array(n).fill(Infinity); // keep track of minimum distance to each vertex
-    const parent = new Array(n).fill(null); // keep track of parent of each vertex in the MST
+  solve_prim() {
+    this.stages = [];
+    
+    const n = this.adj_matrix.length; // number of vertices
+    this.visited = new Array(n).fill(false); // keep track of visited vertices
+    this.distances = new Array(n).fill(Infinity); // keep track of minimum distance to each vertex
+    this.parent = new Array(n).fill(null); // keep track of parent of each vertex in the MST
   
     // start with vertex 0
-    distances[0] = 0;
+    this.distances[0] = 0;
     
     for (let i = 0; i < n - 1; i++) {
       console.log(`ROUND: ${i}   ###############`);
@@ -182,37 +191,38 @@ class Graph {
       let minDist = Infinity;
       let u;
       for (let j = 0; j < n; j++) {
-        if (!visited[j] && distances[j] < minDist) {
-          minDist = distances[j];
+        if (!this.visited[j] && this.distances[j] < minDist) {
+          minDist = this.distances[j];
           u = j;
           console.log(`min-distance: ${minDist}`);
         }
       }
   
-      // mark the vertex as visited
-      visited[u] = true;
+      // mark the vertex as this.visited
+      this.visited[u] = true;
   
-      // update the distances to the neighbors of the vertex
+      // update the this.distances to the neighbors of the vertex
       for (let v = 0; v < n; v++) {
-        if (adjMatrix[u][v] && !visited[v] && adjMatrix[u][v] < distances[v]) {
-          distances[v] = adjMatrix[u][v];
-          parent[v] = u;
-          console.log(`updated neighbor: u: ${u}, v: ${v}`);
+        if (this.adj_matrix[u][v] && !this.visited[v] && this.adj_matrix[u][v] < this.distances[v]) {
+          this.distances[v] = this.adj_matrix[u][v];
+          this.parent[v] = u;
+
+          this.stages.push({
+            visited: [...this.visited],
+            distances: [...this.distances],
+            parent: [...this.parent]
+          })
         }
       }
-  
-      console.log(`Visisted: ${visited}`)
-      console.log(`Distance: ${distances}`)
-      console.log(`Parent: ${parent}\n`)
     }
   
     // build the MST using the parent array
-    const mst = [];
-    for (let i = 1; i < n; i++) {
-      mst.push([parent[i], i, adjMatrix[parent[i]][i]]);
-    }
-  
-    return mst;
+    // const mst = [];
+    // for (let i = 1; i < n; i++) {
+    //   mst.push([this.parent[i], i, this.adj_matrix[this.parent[i]][i]]);
+    // }
+    // console.log(this.stages);
+    // return mst;
   }
 
 }

@@ -1,14 +1,13 @@
 var cy_config;
 function setup_cy() {
-
   cy_config = {
     container: document.getElementById('cy'),
-  
+
     layout: {
       name: 'avsdf',
       nodeSeparation: 120,
     },
-  
+
     style: [
       {
         selector: 'node',
@@ -19,7 +18,6 @@ function setup_cy() {
           'background-color': MAIN_BTN_BG,
         },
       },
-  
       {
         selector: 'edge',
         style: {
@@ -30,8 +28,48 @@ function setup_cy() {
           label: 'data(label)',
         },
       },
+      {
+        selector: 'node.initial',
+        style: {
+            'text-valign': 'center',
+            'color': "white",
+            // 'text-outline-color': '#3a7ecf',
+            // 'text-outline-width': 2,
+            'background-color': NODE_INITIAL
+        }
+      },
+      {
+        selector: 'node.visited',
+        style: {
+            'text-valign': 'center',
+            'color': "white",
+            // 'text-outline-color': 'white',
+            // 'text-outline-width': 2,
+            'background-color': NODE_VISITED
+        }
+      },
+      {
+        selector: 'edge.initial',
+        style: {
+          width: 2,
+          'line-color': EDGE_INITIAL,
+          color: '#000',
+          opacity: 0.8,
+          label: 'data(label)',
+        }
+      },
+      {
+        selector: 'edge.visited',
+        style: {
+          width: 2,
+          'line-color': EDGE_VISITED,
+          color: '#000',
+          opacity: 0.8,
+          label: 'data(label)',
+        }
+      }
     ],
-  
+
     elements: {
       nodes: generate_nodes(graph),
       //   [
@@ -77,10 +115,10 @@ function setup_cytoscape(graph) {
     // remove_vertex(graph, this.id());
   });
 
-  cy.on('rightclick', 'node', function (evt) {
+  cy.on('cxttap', 'node', function (evt) {
     console.log('right clicked ' + this.id());
-    
-    remove_vertex(graph, this.id());
+
+    // remove_vertex(graph, this.id());
   });
 
   // Double click setup
@@ -88,7 +126,7 @@ function setup_cytoscape(graph) {
   var tappedTimeout;
   cy.on('tap', function (event) {
     var tappedNow = event.target;
-    if(event.target === cy) {
+    if (event.target === cy) {
       last_position = event.position;
     }
 
@@ -106,6 +144,13 @@ function setup_cytoscape(graph) {
     }
   });
 
+  cy.on('tap', 'node', function (evt) {
+    console.log('changing color');
+    // this.flashClass('active-node', 1000);
+    const ele = evt.target;
+    ele.flashClass('highlight', 1000);
+  });
+
   cy.on('click', 'edge', function (evt) {
     console.log('clicked ' + this.id());
     update_edge_inputs(this.data());
@@ -117,20 +162,19 @@ function setup_cytoscape(graph) {
     delete_edge(this);
   });
 
-
   cy.on('doubleTap', 'node', function (event) {
     console.log(`DOUBLE CLICK on ${this.id()}`);
     this.remove();
     remove_vertex(this.id());
   });
 
-  cy.on('doubleTap', function(event){
+  cy.on('doubleTap', function (event) {
     var evtTarget = event.target;
-  
-    if( evtTarget === cy ){
+
+    if (evtTarget === cy) {
       console.log('double tap on background');
       add_vertex();
-    } 
+    }
   });
 }
 
@@ -167,21 +211,20 @@ function generate_nodes(graph) {
 }
 
 function redraw_graph() {
-
   setup_adj_matrix(graph);
 }
 
 function add_vertex() {
   GraphObj.add_vertex();
   cy.add([
-    { 
-      group: 'nodes', 
-      data: { 
-        id: GraphObj.get_top_label(), 
-        weight: GraphObj.get_top_label() 
+    {
+      group: 'nodes',
+      data: {
+        id: GraphObj.get_top_label(),
+        weight: GraphObj.get_top_label(),
       },
-      position: last_position
-    }
+      position: last_position,
+    },
   ]);
 
   redraw_graph();
@@ -208,31 +251,32 @@ function updateEdgeFromInput() {
   const inputSrc = document.querySelector('#edgeSource').value;
   const inputTarget = document.querySelector('#edgeTarget').value;
   const inputWeight = document.querySelector('#edgeWeight').value;
-  
-  
-  if(GraphObj.is_edge_there(inputSrc, inputTarget)) {
+
+  if (GraphObj.is_edge_there(inputSrc, inputTarget)) {
     console.log(`updating edge`);
     GraphObj.update_edge(inputSrc, inputTarget, inputWeight);
     currentEdgeObj.data({
-      label: inputWeight
-    })
+      label: inputWeight,
+    });
   } else {
-    console.log("Edge not available! Adding it!");
+    console.log('Edge not available! Adding it!');
     GraphObj.add_edge(inputSrc, inputTarget, inputWeight);
     cy.add([
-      { group: 'edges', data: { 
-        // id: 'e0', 
-        source: inputSrc, 
-        target: inputTarget,
-        label: inputWeight,
-        directed: false 
-      } }
+      {
+        group: 'edges',
+        data: {
+          // id: 'e0',
+          source: inputSrc,
+          target: inputTarget,
+          label: inputWeight,
+          directed: false,
+        },
+      },
     ]);
   }
-  
+
   redraw_graph();
 }
-
 
 function delete_edge(edge_obj) {
   console.log(`Deleting edge`);
@@ -243,4 +287,48 @@ function delete_edge(edge_obj) {
   edge_obj.remove();
 
   redraw_graph();
+}
+
+function draw_nodes() {
+ interval = setInterval(interval_loop, 1000);
+}
+
+function interval_loop() {
+  let c_stage = GraphObj.stages[currentStage];
+  if(!c_stage) return null;
+
+  cy.nodes().removeClass('visited');
+  cy.nodes().filter(function( ele ){
+    const index = GraphObj.get_index_from_label(ele.id());
+    // console.log(c_stage.visited[index]);
+    return c_stage.visited[index];
+  }).addClass('visited');
+
+
+  cy.edges().removeClass('visited');
+  cy.edges().filter(function(edge){
+    let edge_data = edge.data();
+    const src_index = GraphObj.get_index_from_label(edge_data.source);
+    const target_index = GraphObj.get_index_from_label(edge_data.target);
+    // console.log(`src_index: ${src_index}, ttarget_index${target_index}`);
+    if(c_stage.parent[src_index] === target_index 
+      || c_stage.parent[target_index] === src_index){
+      return true
+    } else {
+      return false;
+    }
+  }).addClass('visited');
+  
+  currentStage++;
+  // console.log(`${currentStage}. ${c_stage.parent}`);
+  if(currentStage >= GraphObj.stages.length) {
+    currentStage = 0;
+    clearInterval(interval);
+  }
+}
+
+function start_prims() {
+  console.log("drawing nodes");
+  GraphObj.solve_prim();
+  draw_nodes();
 }

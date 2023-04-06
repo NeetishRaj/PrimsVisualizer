@@ -5,7 +5,7 @@ class Steps {
 
   add(message) {
     this.steps.push(message);
-    console.log(`${this.steps.length}. ${message}`);
+    // console.log(`${this.steps.length}. ${message}`);
   }
 
   print() {
@@ -13,7 +13,7 @@ class Steps {
   }
 }
 
-function prim(adjMatrix) {
+function *prim(adjMatrix) {
   const n = adjMatrix.length; // number of vertices
   const visited = new Array(n).fill(false); // keep track of visited vertices
   const distances = new Array(n).fill(Infinity); // keep track of minimum distance to each vertex
@@ -52,6 +52,11 @@ function prim(adjMatrix) {
         distances[v] = adjMatrix[u][v];
         parent[v] = u;
         // console.log(`updated neighbor: u: ${u}, v: ${v}`);
+        yield {
+          visited: [...visited],
+          distances: [...distances],
+          parent: [...parent]
+        }
       }
     }
 
@@ -64,12 +69,12 @@ function prim(adjMatrix) {
   }
 
   // build the MST using the parent array
-  const mst = [];
-  for (let i = 1; i < n; i++) {
-    mst.push([parent[i], i, adjMatrix[parent[i]][i]]);
-  }
+  // const mst = [];
+  // for (let i = 1; i < n; i++) {
+  //   mst.push([parent[i], i, adjMatrix[parent[i]][i]]);
+  // }
 
-  return mst;
+  // return mst;
 }
 // const adjMatrix = [  
 //   [0, 2, 0, 6, 0],
@@ -87,4 +92,11 @@ const adjMatrix = [
 ];
 
 const mst = prim(adjMatrix);
-console.log(mst); // Output: [ [ 0, 1, 2 ], [ 1, 2, 3 ], [ 0, 3, 6 ], [ 1, 4, 5 ] ]
+const stages = [];
+let result;
+do {
+  result = mst.next(); 
+  stages.push(result.value);
+} while(!result.done)
+
+console.log(stages.length);

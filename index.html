@@ -74,7 +74,7 @@
                       >Source</label
                     >
                   </div>
-                  <input id="edgeSource" class="form-control" type="number" />
+                  <input id="edgeSource" class="form-control" type="number" min="1"/>
                 </div>
                 <div class="input-group mb-3 m-1">
                   <div class="input-group-prepend">
@@ -82,12 +82,12 @@
                       >Target</label
                     >
                   </div>
-                  <input id="edgeTarget" class="form-control" type="number" />
+                  <input id="edgeTarget" class="form-control" type="number" min="1"/>
                 </div>
                 <div class="input-group mb-3 m-1">
                   <div class="input-group-prepend">
                     <label class="input-group-text" style="border-radius: 5px 0 0 5px;" for="edgeWeight"
-                      >Weight</label
+                      >Distance</label
                     >
                   </div>
                   <input id="edgeWeight" class="form-control" type="number" />
@@ -116,7 +116,7 @@
 
       <div class="row controls d-flex align-items-center">
         <div class="btn-group">
-          <button type="button" class="btn btn-lg btn-primary m-4">
+          <button type="button" class="btn btn-lg btn-primary m-4" onClick="start_prims()">
             Start/Stop
           </button>
           <button disabled type="button" class="btn btn-lg btn-primary m-4">
