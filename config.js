@@ -6,7 +6,7 @@ const NODE_VISITED = 'black';
 const NODE_FINAL = '';
 
 const EDGE_INITIAL = '#3a7ecf';
-const EDGE_VISITED = 'black';
+const EDGE_VISITED = 'green';
 const EDGE_FINAL = '';
 
 const INFINITY = '∞';

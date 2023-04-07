@@ -63,7 +63,7 @@ function setup_cy() {
         style: {
           width: 2,
           'line-color': EDGE_VISITED,
-          color: '#000',
+          color: 'black',
           opacity: 0.8,
           label: 'data(label)',
         }
@@ -106,6 +106,21 @@ function setup_cy() {
 function setup_cytoscape(graph) {
   setup_cy();
   setup_adj_matrix(graph);
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowLeft') {
+      goto_previous_step();
+    }
+    if (event.key === 'ArrowUp') {
+      goto_last_step();
+    }
+    if (event.key === 'ArrowRight') {
+      goto_next_step();
+    }
+    if (event.key === 'ArrowDown') {
+      goto_first_step();
+    }
+  });
 
   cy = window.cy = cytoscape(cy_config);
 
