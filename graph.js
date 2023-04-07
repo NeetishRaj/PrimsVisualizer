@@ -184,7 +184,12 @@ class Graph {
   
     // start with vertex 0
     this.distances[0] = 0;
-    
+    this.stages.push({
+      visited: [true],
+      distances: [...this.distances],
+      parent: [...this.parent]
+    })
+
     for (let i = 0; i < n - 1; i++) {
       console.log(`ROUND: ${i}   ###############`);
   
