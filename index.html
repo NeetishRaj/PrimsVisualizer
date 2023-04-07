@@ -116,17 +116,17 @@
 
       <div class="row controls d-flex align-items-center">
         <div class="btn-group">
-          <button type="button" class="btn btn-lg btn-primary m-4" onClick="start_prims()">
-            Start/Stop
+          <button id="startStopButton" type="button" class="btn btn-lg btn-primary m-4" onClick="start_prims()">
+            Start
           </button>
-          <button disabled type="button" class="btn btn-lg btn-primary m-4">
+          <button type="button" class="btn btn-lg btn-primary m-4" onClick="goto_previous_step()">
             Previous
           </button>
-          <button disabled type="button" class="btn btn-lg btn-primary m-4">Next</button>
-          <button disabled type="button" class="btn btn-lg btn-primary m-4">
+          <button type="button" class="btn btn-lg btn-primary m-4" onClick="goto_next_step()">Next</button>
+          <button type="button" class="btn btn-lg btn-primary m-4" onClick="goto_first_step()">
             First Step
           </button>
-          <button disabled type="button" class="btn btn-lg btn-primary m-4">
+          <button type="button" class="btn btn-lg btn-primary m-4" onClick="goto_last_step()">
             Last Step
           </button>
         </div>

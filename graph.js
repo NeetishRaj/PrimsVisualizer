@@ -175,7 +175,8 @@ class Graph {
 
   solve_prim() {
     this.stages = [];
-    
+    // console.log(this.adj_matrix);
+
     const n = this.adj_matrix.length; // number of vertices
     this.visited = new Array(n).fill(false); // keep track of visited vertices
     this.distances = new Array(n).fill(Infinity); // keep track of minimum distance to each vertex
@@ -194,7 +195,7 @@ class Graph {
         if (!this.visited[j] && this.distances[j] < minDist) {
           minDist = this.distances[j];
           u = j;
-          console.log(`min-distance: ${minDist}`);
+          // console.log(`min-distance: ${minDist}`);
         }
       }
   
@@ -203,6 +204,9 @@ class Graph {
   
       // update the this.distances to the neighbors of the vertex
       for (let v = 0; v < n; v++) {
+        // console.log(`u: ${u}, v: ${v}`);
+        if(typeof this.adj_matrix[u] === 'undefined') continue;
+
         if (this.adj_matrix[u][v] && !this.visited[v] && this.adj_matrix[u][v] < this.distances[v]) {
           this.distances[v] = this.adj_matrix[u][v];
           this.parent[v] = u;
@@ -217,12 +221,25 @@ class Graph {
     }
   
     // build the MST using the parent array
-    // const mst = [];
-    // for (let i = 1; i < n; i++) {
-    //   mst.push([this.parent[i], i, this.adj_matrix[this.parent[i]][i]]);
-    // }
-    // console.log(this.stages);
-    // return mst;
+    const mst = [];
+    for (let i = 1; i < n; i++) {
+      if(this.parent[i] !== 0 && !this.parent[i]) continue;
+      mst.push([this.parent[i], i, this.adj_matrix[this.parent[i]][i]]);
+    }
+
+    // Push the missing nodes in visisted array
+    mst.forEach((edge) => {
+      this.visited[edge[0]] = true;
+      this.visited[edge[1]] = true;
+    })
+    this.stages.push({
+      visited: [...this.visited],
+      distances: [...this.distances],
+      parent: [...this.parent]
+    })
+
+    console.log(this.stages);
+    return mst;
   }
 
 }

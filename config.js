@@ -10,4 +10,7 @@ const EDGE_VISITED = 'black';
 const EDGE_FINAL = '';
 
 const INFINITY = '∞';
-let GraphObj, graph, currentEdgeObj, last_position, currentStage = 0, interval;
+let GraphObj, graph, currentEdgeObj, last_position;
+
+
+let currentStage = 0, interval, isRunning = false;

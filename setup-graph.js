@@ -293,7 +293,7 @@ function draw_nodes() {
  interval = setInterval(interval_loop, 1000);
 }
 
-function interval_loop() {
+function interval_loop(go_forward = true) {
   let c_stage = GraphObj.stages[currentStage];
   if(!c_stage) return null;
 
@@ -319,16 +319,92 @@ function interval_loop() {
     }
   }).addClass('visited');
   
-  currentStage++;
+  if(go_forward) {
+    currentStage++;
+  } else {
+    currentStage--;
+    if(currentStage <  0) currentStage = 0;
+  }
+
   // console.log(`${currentStage}. ${c_stage.parent}`);
   if(currentStage >= GraphObj.stages.length) {
     currentStage = 0;
     clearInterval(interval);
+    isRunning = false;
+    document.querySelector('#startStopButton').textContent = "Start";
   }
 }
 
-function start_prims() {
-  console.log("drawing nodes");
-  GraphObj.solve_prim();
+function stop() {
+  isRunning = false;
+  clearInterval(interval);
+  document.querySelector('#startStopButton').textContent = "Start";
+}
+
+function start() {
+  isRunning = true;
+  const mst = GraphObj.solve_prim();
+  console.log(mst);
   draw_nodes();
+  document.querySelector('#startStopButton').textContent = "Stop";
+}
+
+function start_prims() {
+  if(isRunning) {
+    stop();
+  } else {
+    start();
+  }
+}
+
+
+function goto_first_step() {
+  console.log("Goto First step");
+
+  if(GraphObj.stages.length > 0) {
+    currentStage = 0;
+    interval_loop();
+  } else {
+    GraphObj.solve_prim();
+    currentStage = 0;
+    interval_loop();
+  }
+}
+
+function goto_last_step() {
+  console.log("Goto Last step");
+
+  if(GraphObj.stages.length > 0) {
+    currentStage = GraphObj.stages.length - 1;
+    interval_loop();
+  } else {
+    GraphObj.solve_prim();
+    currentStage = GraphObj.stages.length - 1;
+    interval_loop();
+  }
+}
+
+function goto_next_step() {
+  console.log("Goto next step");
+
+  if(GraphObj.stages.length > 0) {
+    interval_loop(true);
+  } else {
+    GraphObj.solve_prim();
+    currentStage = 0;
+    interval_loop(true);
+  }
+}
+
+function goto_previous_step() {
+  console.log("Goto Previous step");
+
+
+  if(GraphObj.stages.length > 0) {
+    interval_loop(false);
+  } else {
+    GraphObj.solve_prim();
+    currentStage = 1;
+    interval_loop(false);
+  }
 }
