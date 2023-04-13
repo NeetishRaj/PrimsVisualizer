@@ -60,7 +60,7 @@ class Graph {
       this.node_labels.push(i);      
     }
   
-    console.log(this.adj_matrix);
+    // console.log(this.adj_matrix);
     return this;
   }
   get_index_from_label(label) {
@@ -183,7 +183,6 @@ class Graph {
     for (let i = 0; i < result.length; i++) {
       for (let j = 0; j < result[i].length; j++) {
         if(result[i][j] === 0){
-          console.log(result[i][j]);
           result[i][j] = INFINITY;
         }
       }
@@ -212,7 +211,7 @@ class Graph {
     })
 
     for (let i = 0; i < n - 1; i++) {
-      console.log(`ROUND: ${i}   ###############`);
+      // console.log(`ROUND: ${i}   ###############`);
   
       // find the vertex with the minimum distance among the unvisited vertices
       let minDist = Infinity;
@@ -264,7 +263,7 @@ class Graph {
       parent: [...this.parent]
     })
 
-    console.log(this.stages);
+    // console.log(this.stages);
     return mst;
   }
 

@@ -141,9 +141,7 @@ function setup_cytoscape(graph) {
   cy.on('cxttap', 'node', function (evt) {
     console.log('right clicked ' + this.id());
     GraphObj.setup_start_vertex(this.id());
-    cy.nodes().removeClass('active');
-    this.addClass('active');
-    put_message(`Selected '${this.id()}' as start vertex`);
+    draw_start_vertex();
   });
 
   // Double click setup
@@ -323,13 +321,28 @@ function delete_edge(edge_obj) {
   redraw_graph();
 }
 
+function draw_start_vertex() {
+  cy.nodes().removeClass('active');
+  const start_label = GraphObj.node_labels[GraphObj.startVertex];
+  cy.nodes(`#${start_label}`).addClass('active');
+  put_message(`Selected '${start_label}' as start vertex`);
+}
+
 function draw_nodes() {
  interval = setInterval(interval_loop, 1000);
 }
 
 function interval_loop(go_forward = true) {
   let c_stage = GraphObj.stages[currentStage];
-  if(!c_stage) return null;
+  if(!c_stage) {
+    console.log(`Invalid stage at stage no ${currentStage} where total is ${GraphObj.stages.length}`);
+    if(currentStage < GraphObj.stages.length / 2) {
+      currentStage = 0;
+    } else {
+      currentStage = GraphObj.stages.length - 1;
+    }
+    return null;
+  }
 
   cy.nodes().removeClass('visited');
   cy.nodes().filter(function( ele ){
@@ -356,13 +369,12 @@ function interval_loop(go_forward = true) {
   if(go_forward) {
     currentStage++;
   } else {
-    currentStage--;
     if(currentStage <  0) currentStage = 0;
   }
 
   // console.log(`${currentStage}. ${c_stage.parent}`);
   if(currentStage >= GraphObj.stages.length) {
-    currentStage = 0;
+    // currentStage = 0;
     clearInterval(interval);
     isRunning = false;
     document.querySelector('#startStopButton').textContent = "Start";
@@ -377,8 +389,10 @@ function stop() {
 
 function start() {
   isRunning = true;
+  currentStage = 0;
   const mst = GraphObj.solve_prim();
   // console.log(mst);
+  draw_start_vertex();
   draw_nodes();
   document.querySelector('#startStopButton').textContent = "Stop";
 }
@@ -431,10 +445,11 @@ function goto_next_step() {
 }
 
 function goto_previous_step() {
-  console.log("Goto Previous step");
+  console.log(`Goto Previous step from ${currentStage}`);
 
 
   if(GraphObj.stages.length > 0) {
+    currentStage--;
     interval_loop(false);
   } else {
     GraphObj.solve_prim();
