@@ -284,7 +284,12 @@ function updateEdgeFromInput() {
   const inputTarget = document.querySelector('#edgeTarget').value;
   const inputWeight = document.querySelector('#edgeWeight').value;
 
-  if(Number.isNaN(parseInt(inputWeight))){
+  if(inputSrc === inputTarget) {
+    console.log("Invalid Edges");
+    return null;
+  }
+
+  if(Number.isNaN(parseInt(inputWeight)) || parseInt(inputWeight) <= 0){
     console.log("Invalid edge weight");
     return null;
   }
