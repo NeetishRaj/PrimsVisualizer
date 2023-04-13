@@ -191,6 +191,11 @@ function setup_cytoscape(graph) {
       add_vertex();
     }
   });
+
+  document.querySelector('#edgeWeight').addEventListener('input', (e) => {
+    const val = parseInt(e.target.value);
+    if(val < 0) e.target.value = 0;
+  })
 }
 
 function generate_edges(graph) {
