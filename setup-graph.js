@@ -132,8 +132,8 @@ function setup_cytoscape(graph) {
 
   cy.on('cxttap', 'node', function (evt) {
     console.log('right clicked ' + this.id());
-
-    // remove_vertex(graph, this.id());
+    GraphObj.setup_start_vertex(this.id());
+    put_message(`Selected '${this.id()}' as start vertex`);
   });
 
   // Double click setup
@@ -196,6 +196,10 @@ function setup_cytoscape(graph) {
     const val = parseInt(e.target.value);
     if(val < 0) e.target.value = 0;
   })
+}
+
+function put_message(msg) {
+  document.getElementById('messageBox').textContent = msg;
 }
 
 function generate_edges(graph) {

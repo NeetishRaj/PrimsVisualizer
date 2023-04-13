@@ -16,6 +16,16 @@ class Graph {
     this.parent = [];
   }
 
+  setup_start_vertex(vertex_label) {
+    const vertex_index = this.get_index_from_label(parseInt(vertex_label));
+    if(vertex_index >= 0){
+      this.startVertex = vertex_index;
+    } else {
+      console.log('Invalid start Vertex');
+      this.startVertex = 0;
+    }
+  }
+
   generateRandomGraph() {
     let vertexCount =
       LOWER_VERTEX_COUNT +
@@ -191,10 +201,12 @@ class Graph {
     this.distances = new Array(n).fill(Infinity); // keep track of minimum distance to each vertex
     this.parent = new Array(n).fill(null); // keep track of parent of each vertex in the MST
   
-    // start with vertex 0
-    this.distances[0] = 0;
+    // start with some vertex
+    this.distances[this.startVertex] = 0;
+    let tmp = [...this.visited];
+    tmp[this.startVertex] = true;
     this.stages.push({
-      visited: [true],
+      visited: tmp,
       distances: [...this.distances],
       parent: [...this.parent]
     })
