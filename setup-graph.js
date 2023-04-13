@@ -284,6 +284,11 @@ function updateEdgeFromInput() {
   const inputTarget = document.querySelector('#edgeTarget').value;
   const inputWeight = document.querySelector('#edgeWeight').value;
 
+  if(Number.isNaN(parseInt(inputWeight))){
+    console.log("Invalid edge weight");
+    return null;
+  }
+
   if (GraphObj.is_edge_there(inputSrc, inputTarget)) {
     console.log(`updating edge`);
     GraphObj.update_edge(inputSrc, inputTarget, inputWeight);
