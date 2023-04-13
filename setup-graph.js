@@ -49,6 +49,14 @@ function setup_cy() {
         }
       },
       {
+        selector: 'node.active',
+        style: {
+            'text-valign': 'center',
+            'color': "white",
+            'background-color': NODE_ACTIVE
+        }
+      },
+      {
         selector: 'edge.initial',
         style: {
           width: 2,
@@ -133,6 +141,8 @@ function setup_cytoscape(graph) {
   cy.on('cxttap', 'node', function (evt) {
     console.log('right clicked ' + this.id());
     GraphObj.setup_start_vertex(this.id());
+    cy.nodes().removeClass('active');
+    this.addClass('active');
     put_message(`Selected '${this.id()}' as start vertex`);
   });
 
@@ -368,7 +378,7 @@ function stop() {
 function start() {
   isRunning = true;
   const mst = GraphObj.solve_prim();
-  console.log(mst);
+  // console.log(mst);
   draw_nodes();
   document.querySelector('#startStopButton').textContent = "Stop";
 }
