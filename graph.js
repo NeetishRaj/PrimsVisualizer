@@ -169,6 +169,15 @@ class Graph {
     this.node_labels.forEach((item, index) => {
       result.push([item, ...this.adj_matrix[index]]);
     });
+
+    for (let i = 0; i < result.length; i++) {
+      for (let j = 0; j < result[i].length; j++) {
+        if(result[i][j] === 0){
+          console.log(result[i][j]);
+          result[i][j] = INFINITY;
+        }
+      }
+    }
   
     return result;
   }

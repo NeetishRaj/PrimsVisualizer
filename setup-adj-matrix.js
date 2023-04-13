@@ -9,20 +9,18 @@ function setup_adj_matrix(adj_matrix) {
   var tableBody = document.createElement('tbody');
 
   labeled_adj_graph.forEach(function (rowData) {
-    if(rowData[1] !== INFINITY) {
-      var row = document.createElement('tr');
-      row.setAttribute('style', 'height: 30px;');
-  
-      rowData.forEach(function (cellData) {
-        var cell = document.createElement('td');
-        cell.setAttribute('style', 'width: 30px;');
+    var row = document.createElement('tr');
+    row.setAttribute('style', 'height: 30px;');
 
-        cell.appendChild(document.createTextNode(cellData));
-        row.appendChild(cell);
-      });
-  
-      tableBody.appendChild(row);
-    }
+    rowData.forEach(function (cellData) {
+      var cell = document.createElement('td');
+      cell.setAttribute('style', 'width: 30px;');
+
+      cell.appendChild(document.createTextNode(cellData));
+      row.appendChild(cell);
+    });
+
+    tableBody.appendChild(row);
   });
 
   table.appendChild(tableBody);
