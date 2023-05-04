@@ -1,4 +1,5 @@
-
+import '../public/font/Roboto-Regular.ttf';
+import './styles/global.css';
 
 
 
