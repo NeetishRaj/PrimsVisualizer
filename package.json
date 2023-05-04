@@ -1,0 +1,22 @@
+{
+  "name": "prims-visulaizer",
+  "version": "1.0.0",
+  "description": "A graphical visualizer for Prim's algorithm",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "prims",
+    "algorithm",
+    "visualizer"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jest": "^29.5.0"
+  }
+}
