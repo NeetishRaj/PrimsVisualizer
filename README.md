@@ -9,7 +9,7 @@ Please make sure latest version of nodejs is installed in your machine before pr
 ```
 npm run build
 ```
-Now put the newly created `dist` folder in your webs server to deploy this website.
+Now put the newly created `dist` folder in your web server to deploy this website.
 
 
 ### Set up Project
@@ -30,6 +30,11 @@ this should open the Prim's visualizer in the browser.
 npm run build
 ```
 Copy the contents of `dist` folder.
+
+### Run the unit tests
+```
+npm run test
+```
 
 
 
