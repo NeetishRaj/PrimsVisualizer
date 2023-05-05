@@ -29,3 +29,5 @@ function setup_adj_matrix(adj_matrix) {
   table_container.innerHTML = '';
   table_container.appendChild(table);
 }
+
+export default setup_adj_matrix;

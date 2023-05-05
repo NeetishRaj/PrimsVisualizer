@@ -269,6 +269,6 @@ class Graph {
 
 }
 
-
+export default Graph;
 // const g = new Graph();
 // g.generateRandomGraph().remove_vertex(2);

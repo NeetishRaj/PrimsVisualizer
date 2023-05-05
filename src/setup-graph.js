@@ -1,3 +1,9 @@
+import setup_adj_matrix from  "./setup-adj-matrix.js"
+
+import cytoscape from 'cytoscape';
+import avsdf from 'cytoscape-avsdf';
+
+
 var cy_config;
 function setup_cy() {
   cy_config = {
@@ -111,7 +117,7 @@ function setup_cy() {
   };
 }
 
-function setup_cytoscape(graph) {
+export function setup_cytoscape(graph) {
   setup_cy();
   setup_adj_matrix(graph);
 
@@ -129,7 +135,7 @@ function setup_cytoscape(graph) {
       goto_first_step();
     }
   });
-
+  cytoscape.use( avsdf );
   cy = window.cy = cytoscape(cy_config);
 
   cy.on('click', 'node', function (evt) {
@@ -467,3 +473,10 @@ function goto_previous_step() {
     interval_loop(false);
   }
 }
+
+window.start_prims = start_prims;
+window.goto_first_step = goto_first_step;
+window.goto_last_step = goto_last_step;
+window.goto_next_step = goto_next_step;
+window.goto_previous_step = goto_previous_step;
+window.updateEdgeFromInput = updateEdgeFromInput;
