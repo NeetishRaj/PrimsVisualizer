@@ -4,8 +4,8 @@
   "description": "A graphical visualizer for Prim's algorithm",
   "private": true,
   "scripts": {
-    "start": "webpack serve --open --mode=development",
-    "prod": "webpack --mode=production",
+    "dev": "webpack serve --open --mode=development",
+    "build": "webpack --mode=production",
     "test": "jest"
   },
   "keywords": [

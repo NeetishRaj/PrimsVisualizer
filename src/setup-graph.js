@@ -206,10 +206,10 @@ export function setup_cytoscape(graph) {
     }
   });
 
-  document.querySelector('#edgeWeight').addEventListener('input', (e) => {
-    const val = parseInt(e.target.value);
-    if(val < 0) e.target.value = 0;
-  })
+  // document.querySelector('#edgeWeight').addEventListener('input', (e) => {
+  //   const val = parseInt(e.target.value);
+  //   if(val < 0) e.target.value = 0;
+  // })
 }
 
 function put_message(msg) {
@@ -295,7 +295,7 @@ function updateEdgeFromInput() {
     return null;
   }
 
-  if(Number.isNaN(parseInt(inputWeight)) || parseInt(inputWeight) <= 0){
+  if(Number.isNaN(parseInt(inputWeight))){
     console.log("Invalid edge weight");
     return null;
   }

@@ -7,7 +7,7 @@ Please make sure latest version of nodejs is installed in your machine before pr
 
 ### Publishing the website
 ```
-npm run prod
+npm run build
 ```
 Now put the newly created `dist` folder in your webs server to deploy this website.
 
@@ -21,13 +21,13 @@ npm install
 
 2. Run the website locally
 ```
-npm run start
+npm run dev
 ```
 this should open the Prim's visualizer in the browser.
 
 3. To create static build files for hosting
 ```
-npm run prod
+npm run build
 ```
 Copy the contents of `dist` folder.
 
