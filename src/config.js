@@ -11,6 +11,7 @@ window.EDGE_VISITED = 'green';
 window.EDGE_FINAL = '';
 
 window.INFINITY = '∞';
+window.BIG_NUMBER = Number.POSITIVE_INFINITY;
 window.GraphObj = undefined; 
 window.graph =undefined;
 window.currentEdgeObj = undefined; 

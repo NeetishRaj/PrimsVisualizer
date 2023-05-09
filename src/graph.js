@@ -1,6 +1,7 @@
 const LOWER_VERTEX_COUNT = 3;
 const UPPER_VERTEX_COUNT = 8;
 const UPPER_EDGE_WEIGHT = 15;
+const BIG_NUMBER = Number.POSITIVE_INFINITY;
 
 class Graph {
   constructor() {
@@ -18,12 +19,24 @@ class Graph {
 
   setup_start_vertex(vertex_label) {
     const vertex_index = this.get_index_from_label(parseInt(vertex_label));
-    if(vertex_index >= 0){
+    if (vertex_index >= 0) {
       this.startVertex = vertex_index;
     } else {
-      console.log('Invalid start Vertex');
+      console.log("Invalid start Vertex");
       this.startVertex = 0;
     }
+  }
+
+  set_custom_graph(custom_graph) {
+    this.adj_matrix = custom_graph;
+
+    this.update_graph();
+
+    for (let i = 1; i <= this.nodes_count; i++) {
+      this.node_labels.push(i);
+    }
+
+    return this;
   }
 
   generateRandomGraph() {
@@ -37,29 +50,29 @@ class Graph {
     for (let i = 0; i < vertexCount; i++) {
       this.adj_matrix[i] = [];
     }
-  
+
     for (let i = 0; i < vertexCount; i++) {
       for (let j = 0; j < vertexCount; j++) {
-        this.adj_matrix[i][j] = 0;
+        this.adj_matrix[i][j] = BIG_NUMBER;
       }
     }
-  
+
     for (let i = 0; i < vertexCount; i++) {
       for (let j = 0; j < Math.ceil(vertexCount / 3); j++) {
         const rand_weight = Math.ceil(Math.random() * UPPER_EDGE_WEIGHT);
         const rand_pos = Math.floor(Math.random() * vertexCount);
-        
-        if(i === rand_pos) continue;
-  
+
+        if (i === rand_pos) continue;
+
         this.adj_matrix[i][rand_pos] = rand_weight;
         this.adj_matrix[rand_pos][i] = rand_weight;
       }
     }
 
     for (let i = 1; i <= this.nodes_count; i++) {
-      this.node_labels.push(i);      
+      this.node_labels.push(i);
     }
-  
+
     // console.log(this.adj_matrix);
     return this;
   }
@@ -67,14 +80,12 @@ class Graph {
     return this.node_labels.indexOf(parseInt(label));
   }
   get_top_label() {
-    if(this.nodes_count > 0)
-      return this.node_labels[this.nodes_count - 1];
-    else 
-      return 1;
+    if (this.nodes_count > 0) return this.node_labels[this.nodes_count - 1];
+    else return 1;
   }
 
   add_vertex() {
-    if(this.node_labels.length > 0) {
+    if (this.node_labels.length > 0) {
       const last_label = this.node_labels[this.node_labels.length - 1];
       this.node_labels.push(last_label + 1);
     } else {
@@ -89,11 +100,11 @@ class Graph {
     this.update_graph();
     return this;
   }
-  
+
   remove_vertex(vertex_label) {
     let vertex = this.node_labels.indexOf(parseInt(vertex_label));
 
-    if(vertex < 0 || vertex >= this.nodes_count) {
+    if (vertex < 0 || vertex >= this.nodes_count) {
       console.log(`Cannot remove vertex ${vertex_label}`);
       return this;
     }
@@ -117,8 +128,11 @@ class Graph {
   is_edge_there(source, dest) {
     const src_index = this.node_labels.indexOf(parseInt(source));
     const dest_index = this.node_labels.indexOf(parseInt(dest));
-    
-    if(this.adj_matrix[src_index][dest_index] && this.adj_matrix[dest_index][src_index]){
+
+    if (
+      this.adj_matrix[src_index][dest_index] &&
+      this.adj_matrix[dest_index][src_index]
+    ) {
       return true;
     }
 
@@ -130,7 +144,9 @@ class Graph {
     const dest_index = this.node_labels.indexOf(parseInt(dest));
     new_weight = parseInt(new_weight);
 
-    console.log(`Adding edge src: ${src_index}, dest: ${dest_index}, new_weight: ${new_weight}`);
+    console.log(
+      `Adding edge src: ${src_index}, dest: ${dest_index}, new_weight: ${new_weight}`
+    );
     this.adj_matrix[src_index][dest_index] = new_weight;
     this.adj_matrix[dest_index][src_index] = new_weight;
 
@@ -144,7 +160,9 @@ class Graph {
     const dest_index = this.node_labels.indexOf(parseInt(dest));
     new_weight = parseInt(new_weight);
 
-    console.log(`src: ${src_index}, dest: ${dest_index}, new_weight: ${new_weight}`);
+    console.log(
+      `src: ${src_index}, dest: ${dest_index}, new_weight: ${new_weight}`
+    );
     this.adj_matrix[src_index][dest_index] = new_weight;
     this.adj_matrix[dest_index][src_index] = new_weight;
 
@@ -158,7 +176,7 @@ class Graph {
     const dest_index = this.node_labels.indexOf(parseInt(dest));
 
     console.log(`Deleting edge: src: ${src_index}, dest: ${dest_index}`);
-    
+
     this.adj_matrix[src_index][dest_index] = 0;
     this.adj_matrix[dest_index][src_index] = 0;
 
@@ -172,9 +190,9 @@ class Graph {
   }
 
   get_labeled_graph() {
-    let top_row = ['', ...this.node_labels];
+    let top_row = ["", ...this.node_labels];
     let result = [top_row];
-  
+
     // let result = [headers];
     this.node_labels.forEach((item, index) => {
       result.push([item, ...this.adj_matrix[index]]);
@@ -182,12 +200,14 @@ class Graph {
 
     for (let i = 0; i < result.length; i++) {
       for (let j = 0; j < result[i].length; j++) {
-        if(result[i][j] === 0){
+        if (result[i][j] === 0) {
+          result[i][j] = 0;
+        } else if (result[i][j] === BIG_NUMBER) {
           result[i][j] = INFINITY;
         }
       }
     }
-  
+
     return result;
   }
 
@@ -199,7 +219,7 @@ class Graph {
     this.visited = new Array(n).fill(false); // keep track of visited vertices
     this.distances = new Array(n).fill(Infinity); // keep track of minimum distance to each vertex
     this.parent = new Array(n).fill(null); // keep track of parent of each vertex in the MST
-  
+
     // start with some vertex
     this.distances[this.startVertex] = 0;
     let tmp = [...this.visited];
@@ -207,15 +227,15 @@ class Graph {
     this.stages.push({
       visited: tmp,
       distances: [...this.distances],
-      parent: [...this.parent]
-    })
+      parent: [...this.parent],
+    });
 
     for (let i = 0; i < n - 1; i++) {
       // console.log(`ROUND: ${i}   ###############`);
-  
+
       // find the vertex with the minimum distance among the unvisited vertices
-      let minDist = Infinity;
-      let u;
+      let minDist = BIG_NUMBER;
+      let u = -1;
       for (let j = 0; j < n; j++) {
         if (!this.visited[j] && this.distances[j] < minDist) {
           minDist = this.distances[j];
@@ -223,32 +243,36 @@ class Graph {
           // console.log(`min-distance: ${minDist}`);
         }
       }
-  
+
       // mark the vertex as this.visited
       this.visited[u] = true;
-  
+
       // update the this.distances to the neighbors of the vertex
       for (let v = 0; v < n; v++) {
         // console.log(`u: ${u}, v: ${v}`);
-        if(typeof this.adj_matrix[u] === 'undefined') continue;
+        if (typeof this.adj_matrix[u] === "undefined") continue;
 
-        if (this.adj_matrix[u][v] && !this.visited[v] && this.adj_matrix[u][v] < this.distances[v]) {
+        if (
+          this.adj_matrix[u][v] !== BIG_NUMBER &&
+          !this.visited[v] &&
+          this.adj_matrix[u][v] < this.distances[v]
+        ) {
           this.distances[v] = this.adj_matrix[u][v];
           this.parent[v] = u;
 
           this.stages.push({
             visited: [...this.visited],
             distances: [...this.distances],
-            parent: [...this.parent]
-          })
+            parent: [...this.parent],
+          });
         }
       }
     }
-  
+
     // build the MST using the parent array
     const mst = [];
     for (let i = 1; i < n; i++) {
-      if(this.parent[i] !== 0 && !this.parent[i]) continue;
+      if (this.parent[i] !== 0 && !this.parent[i]) continue;
       mst.push([this.parent[i], i, this.adj_matrix[this.parent[i]][i]]);
     }
 
@@ -256,17 +280,16 @@ class Graph {
     mst.forEach((edge) => {
       this.visited[edge[0]] = true;
       this.visited[edge[1]] = true;
-    })
+    });
     this.stages.push({
       visited: [...this.visited],
       distances: [...this.distances],
-      parent: [...this.parent]
-    })
+      parent: [...this.parent],
+    });
 
     // console.log(this.stages);
-    return mst;
+    return this;
   }
-
 }
 
 export default Graph;

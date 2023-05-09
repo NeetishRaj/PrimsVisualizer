@@ -221,19 +221,17 @@ function generate_edges(graph) {
 
   for (let i = 0; i < graph.length; i++) {
     for (let j = i + 1; j < graph[i].length; j++) {
-      if (graph[i][j] === INFINITY) continue;
+      if (graph[i][j] === BIG_NUMBER) continue;
 
-      if (graph[i][j] !== 0) {
-        result.push({
-          data: {
-            source: `${i + 1}`,
-            target: `${j + 1}`,
-            directed: 'false',
-            label: graph[i][j],
-          },
-          classes: 'autorotate',
-        });
-      }
+      result.push({
+        data: {
+          source: `${i + 1}`,
+          target: `${j + 1}`,
+          directed: 'false',
+          label: graph[i][j],
+        },
+        classes: 'autorotate',
+      });
     }
   }
 
@@ -406,7 +404,7 @@ function stop() {
 function start() {
   isRunning = true;
   currentStage = 0;
-  const mst = GraphObj.solve_prim();
+  GraphObj.solve_prim();
   // console.log(mst);
   draw_start_vertex();
   draw_nodes();
