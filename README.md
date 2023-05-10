@@ -1,5 +1,5 @@
 # Prim's Visualizer
-
+![img screenshot](diagrams/PrimsVisualizer.png?raw=true "Title")
 
 ### Project requirements
 Please make sure latest version of nodejs is installed in your machine before proceeding. 
@@ -36,7 +36,14 @@ Copy the contents of `dist` folder.
 npm run test
 ```
 
+### Run the functional automated tests
+```
+npm run test:functional
+```
 
+![img screenshot](diagrams/Backend_architecture_diagram.jpg?raw=true "Title")
+![img screenshot](diagrams/ClassDiagram.jpg?raw=true "Title")
+![img screenshot](diagrams/DataFlowDiagram.jpg?raw=true "Title")
 
 
 

@@ -1,4 +1,4 @@
-import Graph from "../src/graph";
+import Graph from "../../src/graph";
 
 describe("Graph class", () => {
   describe("generates random graph", () => {
