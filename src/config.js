@@ -10,7 +10,7 @@ window.EDGE_INITIAL = '#3a7ecf';
 window.EDGE_VISITED = 'green';
 window.EDGE_FINAL = '';
 
-window.INFINITY = '∞';
+window.INFINITY = '&#8734';
 window.BIG_NUMBER = Number.POSITIVE_INFINITY;
 window.GraphObj = undefined; 
 window.graph =undefined;

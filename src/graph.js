@@ -129,6 +129,11 @@ class Graph {
     const src_index = this.node_labels.indexOf(parseInt(source));
     const dest_index = this.node_labels.indexOf(parseInt(dest));
 
+    if(this.adj_matrix[src_index][dest_index] === 0 &&
+      this.adj_matrix[dest_index][src_index] === 0) {
+        return true;
+    }
+
     if (
       this.adj_matrix[src_index][dest_index] &&
       this.adj_matrix[dest_index][src_index]

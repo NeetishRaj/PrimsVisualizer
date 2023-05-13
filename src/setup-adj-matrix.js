@@ -16,7 +16,9 @@ function setup_adj_matrix(adj_matrix) {
       var cell = document.createElement('td');
       cell.setAttribute('style', 'width: 30px;');
 
-      cell.appendChild(document.createTextNode(cellData));
+      // cell.appendChild(document.createTextNode(cellData));
+      cell.innerHTML = cellData;
+
       row.appendChild(cell);
     });
 
