@@ -93,10 +93,11 @@ class Graph {
     }
 
     for (let i = 0; i < this.nodes_count; i++) {
-      this.adj_matrix[i].push(0);
+      this.adj_matrix[i].push(BIG_NUMBER);
     }
-    this.adj_matrix.push(new Array(this.nodes_count + 1).fill(0));
-    console.log(this);
+    this.adj_matrix.push(new Array(this.nodes_count + 1).fill(BIG_NUMBER));
+
+    // console.log(this);
     this.update_graph();
     return this;
   }
@@ -128,6 +129,14 @@ class Graph {
   is_edge_there(source, dest) {
     const src_index = this.node_labels.indexOf(parseInt(source));
     const dest_index = this.node_labels.indexOf(parseInt(dest));
+
+    console.log(`source: ${source}, ${src_index}, dest: ${dest},${dest_index}`);
+    console.log(this.adj_matrix);
+
+    if(this.adj_matrix[src_index][dest_index] === BIG_NUMBER &&
+      this.adj_matrix[dest_index][src_index] === BIG_NUMBER) {
+        return false;
+    }
 
     if(this.adj_matrix[src_index][dest_index] === 0 &&
       this.adj_matrix[dest_index][src_index] === 0) {
@@ -182,8 +191,8 @@ class Graph {
 
     console.log(`Deleting edge: src: ${src_index}, dest: ${dest_index}`);
 
-    this.adj_matrix[src_index][dest_index] = 0;
-    this.adj_matrix[dest_index][src_index] = 0;
+    this.adj_matrix[src_index][dest_index] = BIG_NUMBER;
+    this.adj_matrix[dest_index][src_index] = BIG_NUMBER;
 
     this.update_graph();
 

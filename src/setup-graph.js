@@ -273,6 +273,17 @@ function remove_vertex(vertex_no) {
   redraw_graph();
 }
 
+function find_and_update_labels_in_graph(inputSrc, inputTarget, inputWeight) {
+  let edges = cy.edges(`[source = "${inputSrc}"][target = "${inputTarget}"]`);
+  
+  if(edges.length > 0) {
+    edges.data({label: inputWeight});
+  } else {
+    edges = cy.edges(`[source = "${inputTarget}"][target = "${inputSrc}"]`);
+    edges.data({label: inputWeight});
+  }
+}
+
 function update_edge_inputs(edge_data) {
   const inputSrc = document.querySelector('#edgeSource');
   const inputTarget = document.querySelector('#edgeTarget');
@@ -300,10 +311,11 @@ function updateEdgeFromInput() {
 
   if (GraphObj.is_edge_there(inputSrc, inputTarget)) {
     console.log(`updating edge`);
+    //console.log(`src: ${inputSrc}, target: ${inputTarget}`);
+
     GraphObj.update_edge(inputSrc, inputTarget, inputWeight);
-    currentEdgeObj.data({
-      label: inputWeight,
-    });
+    find_and_update_labels_in_graph(inputSrc, inputTarget, inputWeight)
+
   } else {
     console.log('Edge not available! Adding it!');
     GraphObj.add_edge(inputSrc, inputTarget, inputWeight);
